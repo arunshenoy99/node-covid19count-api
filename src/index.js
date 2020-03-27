@@ -14,7 +14,7 @@ app.get('/count', (req, res) => {
     if (!country) {
         country = 'all'
     }
-    getCovid19Data(country, (error, dataJSON) => {
+    getCovid19Data(country.toLowerCase(), (error, dataJSON) => {
         if (error) {
             return res.status(500).send()
         }

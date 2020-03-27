@@ -5,7 +5,7 @@ const dataToJSON = (data) => {
     oldParts.forEach((oldPart) => {
         const parts = oldPart.split('\t')
         const dataObject = {
-            country: parts[0],
+            country: parts[0].toLowerCase(),
             totalCases: parts[1],
             newCases: parts[2],
             totalDeaths: parts[3],
