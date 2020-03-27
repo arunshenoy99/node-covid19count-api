@@ -14,12 +14,15 @@ app.get('/count', (req, res) => {
     if (!country) {
         country = 'all'
     }
-    getCovid19Data(country.toLowerCase(), (error, dataJSON) => {
+    getCovid19Data(country.toLowerCase(), (error, JSONdata) => {
         if (error) {
-            return res.status(500).send()
+            return res.status(500).send({ error })
+        }
+        if (JSONdata.length === 0) {
+            return res.status(404).send({ error: 'We have no data on such a country, please check the country name again boss and try again' })
         }
         res.header('Content-Type', 'application/json')
-        res.send(JSON.stringify(dataJSON))
+        res.send(JSON.stringify(JSONdata))
     })
 })
 

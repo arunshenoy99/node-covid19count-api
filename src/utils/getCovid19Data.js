@@ -3,8 +3,40 @@ const { parse } = require('node-html-parser')
 const fs = require('fs')
 const path = require('path')
 const dataToJSON = require('./dataToJSON')
+const moment = require('moment')
+
+const filePath = path.join(__dirname, '../data/data.txt')
+
+
+const getNotExpiredData = (country) => {
+        const buffer = fs.readFileSync(filePath)
+        const data = buffer.toString()
+        let JSONdata = JSON.parse(data)
+        if (!JSONdata) {
+            return undefined
+        }
+        if (country === 'all') {
+            return JSONdata
+        } else {
+            JSONdata = JSONdata.filter((JSONObject) => JSONObject.country === country)
+            return JSONdata
+        }
+}
 
 const getCovid19Data = (country, callback) => {
+    try { 
+        const stats = fs.statSync(filePath)
+        const mtime = moment(stats.mtime)
+        const now = moment()
+        const minutesPassed = now.diff(mtime, 'minutes')
+        if (minutesPassed < 60) {
+            const JSONdata = getNotExpiredData(country)
+            if (!JSONdata) {
+                throw new Error({ error: 'Unable to fetch data '})
+            }
+            return callback(undefined, JSONdata)
+        }
+    } catch (e) {}
     const url = 'https://www.worldometers.info/coronavirus/'
     request.get({ url }, (error, { body } = {}) => {
         if (error) {
@@ -23,7 +55,6 @@ const getCovid19Data = (country, callback) => {
             data = data + '\n'
         })
         data.trim()
-        const filePath = path.join(__dirname, '../data/data.txt')
         let dataJSON = dataToJSON(data)
         if (!dataJSON) {
             return callback({ error: 'Cannot get JSON data' }, undefined)

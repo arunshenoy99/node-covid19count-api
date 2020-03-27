@@ -1,0 +1,26 @@
+{
+  "name": "covid19-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "moment": "^2.24.0",
+    "node-html-parser": "^1.2.13",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arunshenoy99/node-covid19count-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arunshenoy99/node-covid19count-api/issues"
+  },
+  "homepage": "https://github.com/arunshenoy99/node-covid19count-api#readme"
+}
