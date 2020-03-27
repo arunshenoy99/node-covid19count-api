@@ -1,6 +1,5 @@
 const express = require('express')
 const getCovid19Data = require('./utils/getCovid19Data')
-const dataToJSON = require('./utils/dataToJSON')
 
 const app = express()
 
@@ -15,15 +14,17 @@ app.get('/count', (req, res) => {
     if (!country) {
         country = 'all'
     }
-    getCovid19Data(country, (error, filePath) => {
+    getCovid19Data(country, (error, dataJSON) => {
         if (error) {
             return res.status(500).send()
         }
-        if (filePath) {
-            const dataJSON = dataToJSON(filePath)
-            res.send(dataJSON)
-        }
+        res.header('Content-Type', 'application/json')
+        res.send(JSON.stringify(dataJSON))
     })
+})
+
+app.get('*', (req, res) => {
+    res.send('<h1>Don\'t be smart just goto <a href="/count">Count</a></h1>')
 })
 
 const port = process.env.PORT || 3000

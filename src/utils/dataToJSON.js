@@ -1,14 +1,24 @@
-const fs = require('fs')
-const readline = require('readline')
-const dataToJSON = (path) => {
-    let dataJSON = []
-    const myInterface = readline.createInterface({
-        input: fs.createReadStream(path)
 
+const dataToJSON = (data) => {
+    let dataJSON = []
+    const oldParts = data.split('\n')
+    oldParts.forEach((oldPart) => {
+        const parts = oldPart.split('\t')
+        const dataObject = {
+            country: parts[0],
+            totalCases: parts[1],
+            newCases: parts[2],
+            totalDeaths: parts[3],
+            newDeaths: parts[4],
+            totalRecovered: parts[5],
+            activeCases: parts[6],
+            seriousCases: parts[7],
+            totalCasesPerOneMillionPop: parts[8],
+            totalDeathsPerOneMillionPop: parts[9] 
+        }
+        dataJSON = dataJSON.concat(dataObject)
     })
-    myInterface.on('line', (line) => {
-        console.log(line)
-    })
+    return dataJSON
 }
 
 module.exports = dataToJSON

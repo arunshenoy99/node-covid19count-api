@@ -2,6 +2,7 @@ const request = require('request')
 const { parse } = require('node-html-parser')
 const fs = require('fs')
 const path = require('path')
+const dataToJSON = require('./dataToJSON')
 
 const getCovid19Data = (country, callback) => {
     const url = 'https://www.worldometers.info/coronavirus/'
@@ -19,12 +20,20 @@ const getCovid19Data = (country, callback) => {
             tds.forEach((td) => {
                 data = data + td.text.toString().trim() + '\t'
             })
-            data = data + '\n\n'
+            data = data + '\n'
         })
         data.trim()
         const filePath = path.join(__dirname, '../data/data.txt')
-        fs.writeFileSync(filePath, data)
-        callback(undefined, filePath)
+        let dataJSON = dataToJSON(data)
+        if (!dataJSON) {
+            return callback({ error: 'Cannot get JSON data' }, undefined)
+        }
+        fs.writeFileSync(filePath, JSON.stringify(dataJSON))
+        if (country === 'all') {
+            return callback(undefined, dataJSON)
+        }
+        dataJSON = dataJSON.filter((dataObject) => dataObject.country === country)
+        callback(undefined, dataJSON)
     })
 }
 
