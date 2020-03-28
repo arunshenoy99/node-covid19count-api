@@ -22,6 +22,7 @@ app.get('/count', (req, res) => {
             return res.status(404).send({ error: 'We have no data on such a country, please check the country name again boss and try again' })
         }
         res.header('Content-Type', 'application/json')
+        res.header('Access-Control-Allow-Origin', '*')
         res.send(JSON.stringify(JSONdata))
     })
 })
